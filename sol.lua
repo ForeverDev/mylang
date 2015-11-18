@@ -17,10 +17,12 @@ local function main()
     end
   end
 
-  -- parse the _SRC contents and hand it and the
-  -- memory to the interpreter
+  -- parse the _SRC contents and load the interpreter
   local bytecode = dofile("sol_parse.lua")(_SRC)
-  dofile("sol_interpret.lua")(bytecode)
+  local interpreter = dofile("sol_interpret.lua")
+
+  -- pass bytecode to interpreter
+  interpreter(bytecode)
 
 end
 
