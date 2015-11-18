@@ -1,2 +1,0 @@
-yooo
-my nig nog

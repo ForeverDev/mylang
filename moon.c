@@ -13,13 +13,13 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  if (strlen(argv[1]) <= 5) {
+  if (strlen(argv[1]) <= 4) {
     printf("'%s' is not a valid moon file. Abort", argv[1]);
     return 1;
   }
 
-  char* ftype = (char*)malloc(5);
-  strcpy(ftype, &argv[1][strlen(argv[1]) - 5]);
+  char* ftype = (char*)malloc(4);
+  strcpy(ftype, &argv[1][strlen(argv[1]) - 4]);
   free(ftype);
 
   FILE *f = fopen(argv[1], "rb");
