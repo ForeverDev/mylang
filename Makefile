@@ -1,12 +1,12 @@
 CC = gcc
 CF = -c -Wall
 
-all: moon
-	sudo mv moon /usr/bin
+all: sol
+	sudo mv sol /usr/bin
 	rm -Rf *.o
 
-moon: moon.o
-	$(CC) moon.o -o moon -llua -lm
+sol: sol.o
+	$(CC) sol.o -o sol -llua -lm
 
-moon.o: moon.c
-	$(CC) $(CF) moon.c -o moon.o
+sol.o: sol.c
+	$(CC) $(CF) sol.c -o sol.o

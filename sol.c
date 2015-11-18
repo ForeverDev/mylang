@@ -9,17 +9,20 @@
 int main(int argc, char* argv[]) {
 
   if (argc <= 1) {
-    printf("%s\n", "Usage: moon <filename>.moon");
+    printf("%s\n", "Usage: sol <filename>.sol");
     return 1;
   }
 
   if (strlen(argv[1]) <= 4) {
-    printf("'%s' is not a valid moon file. Abort", argv[1]);
+    printf("'%s' is not a valid sol file. Abort", argv[1]);
     return 1;
   }
 
   char* ftype = (char*)malloc(4);
   strcpy(ftype, &argv[1][strlen(argv[1]) - 4]);
+  if (!strcmp(ftype, ".sol")) {
+    printf("'%s' is not a valid file type. Abort\n", ftype);
+  }
   free(ftype);
 
   FILE *f = fopen(argv[1], "rb");
@@ -44,7 +47,7 @@ int main(int argc, char* argv[]) {
   lua_pushstring(L, contents);
   lua_setglobal(L, "_SRC");
 
-  luaL_dofile(L, "moon.lua");
+  luaL_dofile(L, "sol.lua");
   return 0;
 
 }
