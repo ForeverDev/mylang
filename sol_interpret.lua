@@ -167,14 +167,26 @@ function Interpreter.new(bytecode, storage)
 end
 
 return function(bytecode, memory)
-
   local interp = Interpreter.new(bytecode, 100)
-  -- manually allocate some data to store an integer
-  -- and manually write the binary data
-  local str = "Hello, World!"
-  local sizeof = string.len(str)
-  local pointer = interp.AllocString(str)
-  print(interp.Dereference(pointer, sizeof))
+
+  -- strings to store
+  local strs = {
+    "Hello, World!",
+    "This is an example of pushing multiple strings",
+    "into the memory of Sol!",
+  }
+  -- a table that contains the memory locations of strs
+  local stack = {}
+
+  for i, v in ipairs(strs) do
+    table.insert(stack, interp.AllocString(v))
+  end
+
+  for i, v in ipairs(stack) do
+    print(interp.Dereference(v, string.len(strs[i])))
+  end
+
+  print("Sol's memory: \n")
   interp.PrintAllRawData()
 end
 
