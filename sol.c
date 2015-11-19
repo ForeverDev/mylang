@@ -18,12 +18,15 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  /*
   char* ftype = (char*)malloc(4);
   strcpy(ftype, &argv[1][strlen(argv[1]) - 4]);
+  printf("%s\n", ftype);
   if (!strcmp(ftype, ".sol")) {
     printf("'%s' is not a valid file type. Abort\n", ftype);
   }
   free(ftype);
+  */
 
   FILE *f = fopen(argv[1], "rb");
   long fsize;
@@ -47,7 +50,12 @@ int main(int argc, char* argv[]) {
   lua_pushstring(L, contents);
   lua_setglobal(L, "_SRC");
 
-  luaL_dofile(L, "sol.lua");
+  luaL_loadfile(L, "sol.lua");
+
+  if (lua_pcall(L, -1, 0, 0)) {
+    printf("%s\n", lua_tostring(L, -1));
+  }
+
   return 0;
 
 }

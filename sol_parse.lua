@@ -1,5 +1,11 @@
-local function parse(contents)
+local Parse = {}
+
+function Parse.new()
+
+  local self = {}
+
+  return self
 
 end
 
-return parse
+return Parse
