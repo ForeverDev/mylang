@@ -5,6 +5,8 @@
 
 local function main()
 
+  _G.LIB = {}
+
   local function loadf(f)
     local success, ret = pcall(loadfile(f))
     if not success then
@@ -13,12 +15,18 @@ local function main()
     return ret
   end
 
-  -- parse the _SRC contents and load the interpreter
-  local bytecode = loadf("sol_parse.lua")
-  local interpreter = loadf("sol_interpret.lua")
+  LIB.Token = loadf("sol_token.lua")
+  LIB.Lexer = loadf("sol_lex.lua")
+  LIB.Parser = loadf("sol_parse.lua")
+  LIB.Interpreter = loadf("sol_interpret.lua")
 
-  -- pass bytecode to interpreter
-  interpreter(bytecode)
+  local lex = LIB.Lexer.new(_SRC)
+  local tokens = lex.GenerateTokens()
+  local parser = LIB.Parser.new(tokens)
+  local bytecode = parser.GenerateBytecode()
+  local interpreter = LIB.Interpreter.new(bytecode)
+
+  interpreter.InterpretBytecode()
 
 end
 

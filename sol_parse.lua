@@ -1,8 +1,12 @@
 local Parse = {}
 
-function Parse.new()
+function Parse.new(source)
 
   local self = {}
+
+  function self.GenerateBytecode()
+
+  end
 
   return self
 
