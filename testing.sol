@@ -1,6 +1,6 @@
 // this is an example .sol file
 
 
-func example: int x, int y
+func add: number x, number y
 
 end

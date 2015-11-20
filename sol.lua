@@ -22,6 +22,15 @@ local function main()
 
   local lex = LIB.Lexer.new(_SRC)
   local tokens = lex.GenerateTokens()
+
+  for i, v in pairs(tokens) do
+    io.write(v.typeof)
+    if v.data then
+      io.write("\t" .. v.data)
+    end
+    io.write("\n")
+  end
+
   local parser = LIB.Parser.new(tokens)
   local bytecode = parser.GenerateBytecode()
   local interpreter = LIB.Interpreter.new(bytecode)
