@@ -1,6 +1,10 @@
 // this is an example .sol file
+// sup bro
 
+string str = "Hello!" //swag
+number n = 50
 
-func add: number x, number y
+dl;ASKd 50
 
-end
+println(str == n)
+

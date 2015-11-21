@@ -35,37 +35,70 @@ function Lexer.new(source)
     end
     local c = {}
     c.typeof = nil
-    c.data = chunk
     if chunk == "\n" then
       c.typeof = "NEWLINE"
-      c.data = ""
+    elseif tonumber(chunk) then
+      c.typeof = "NUMBER"
+      c.data = tonumber(chunk)
+    elseif chunk:sub(1, 1) == "\"" and chunk:sub(-1, -1) == "\"" then
+      c.typeof = "STRING"
+      c.data = tostring(chunk)
     elseif chunk == "(" then
       c.typeof = "OPEN_PARENTHESIS"
     elseif chunk == ")" then
       c.typeof = "CLOSE_PARENTHESIS"
+    elseif chunk == "{" then
+      c.typeof = "OPEN_CURLY"
+    elseif chunk == "}" then
+      c.typeof = "CLOSE_CURLY"
+    elseif chunk == "[" then
+      c.typeof = "OPEN_BRACKET"
+    elseif chunk == "]" then
+      c.typeof = "CLOSE_BRACKET"
     elseif chunk == ":" then
       c.typeof = "COLON"
     elseif chunk == "," then
       c.typeof = "COMMA"
+    elseif chunk == "=" then
+      inc()
+      if char() == "=" then
+        c.typeof = "COMPARISON_OPERATOR"
+      else
+        c.typeof = "ASSIGNMENT_OPERATOR"
+        dec()
+      end
+    elseif chunk == "+" then
+      c.typeof = "ADDITION_OPERATOR"
+    elseif chunk == "-" then
+      c.typeof = "SUBTRACTION_OPERATOR"
+    elseif chunk == "*" then
+      c.typeof = "ASTERISCK"
+    elseif chunk == "/" then
+      c.typeof = "DIVISION_OPERATOR"
     elseif chunk == "end" then
       c.typeof = "END"
-    elseif chunk == "func" then
+    elseif chunk == "function" then
       c.typeof = "DEF_FUNCTION"
     elseif datatypes[chunk] then
       c.typeof = "DATATYPE"
+      c.data = chunk
     else
       c.typeof = "IDENTIFIER"
+      c.data = chunk
     end
     table.insert(tokens, c)
   end
 
   function self.GenerateTokens()
-    source = (source .. " "):gsub("//.-\n", "")
-    length = source:len()
     local cnode = ""
     while space() do
       local c = char()
-      if c:match("%p") then
+      if c == "/" and source:sub(index + 1, index + 1) == "/" then
+        while space() and char() ~= "\n" do
+          inc()
+        end
+        table.insert(tokens, {typeof = "NEWLINE"})
+      elseif c:match("%p") and c ~= "\"" and cnode:sub(1, 1) ~= "\"" then
         if cnode:len() > 0 then
           process_chunk(cnode)
           cnode = ""
@@ -76,7 +109,7 @@ function Lexer.new(source)
           process_chunk(cnode)
           cnode = ""
         end
-        process_chunk(c)
+        table.insert(tokens, {typeof = "NEWLINE"})
       elseif c ~= " " then
         cnode = cnode .. c
       else
@@ -86,6 +119,12 @@ function Lexer.new(source)
       inc()
     end
     return tokens
+  end
+
+  function self.PrintTokens()
+    for i, v in ipairs(tokens) do
+      print(v.typeof, v.data or "")
+    end
   end
 
   return self
