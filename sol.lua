@@ -26,9 +26,6 @@ local function main()
   local bytecode = parser.GenerateBytecode()
   local interpreter = LIB.Interpreter.new(bytecode)
 
-  --lex.PrintTokens()
-  parser.PrintBytecode()
-
   interpreter.InterpretBytecode()
 
 end

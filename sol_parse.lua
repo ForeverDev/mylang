@@ -63,23 +63,29 @@ function Parse.new(tokens)
 
   local function matches_grammar(toks, grammar)
     local token_index = 1
-    local i = 1
-    while i <= #grammar and token_index <= #toks do
-      if grammar[i] == "..." then
-        i = i + 1
-        while toks[token_index].typeof ~= grammar[i] do
+    local grammar_index = 1
+    while grammar_index <= #grammar and token_index <= #toks do
+      if grammar[grammar_index] == "..." then
+        grammar_index = grammar_index + 1
+        while grammar[grammar_index] ~= toks[token_index].typeof do
           token_index = token_index + 1
           if token_index > #toks then
             return false
           end
         end
-      elseif grammar[i] ~= toks[token_index].typeof then
+      elseif grammar[grammar_index] ~= toks[token_index].typeof then
         return false
       end
+      grammar_index = grammar_index + 1
       token_index = token_index + 1
-      i = i + 1
     end
     return true
+  end
+
+  local function parse_expression(line, start_index)
+    local tree = {}
+
+    return tree
   end
 
   local function process_statement(current_line)
@@ -98,7 +104,6 @@ function Parse.new(tokens)
           table.insert(code, line[i].data)
         end
       end
-      return
     -- variable declaration
     elseif matches_grammar(line, {"DATATYPE", "IDENTIFIER", "ASSIGNMENT_OPERATOR", "...", "NEWLINE"}) then
       code[1] = "DEF_VARIABLE"
@@ -113,10 +118,23 @@ function Parse.new(tokens)
       else
         --todo parse expression
       end
-    elseif matches_grammar(line, {"IDENTIFIER", "OPEN_PARENTHESIS", "...", "CLOSE_PARENTHESES", "NEWLINE"}) then
+    elseif matches_grammar(line, {"IDENTIFIER", "OPEN_PARENTHESIS", "...", "CLOSE_PARENTHESIS", "NEWLINE"}) then
       code[1] = "CALL_FUNCTION"
-      --todo parse function args
-    else line[1].typeof == "IDENTIFIER" then
+      code[2] = line[1].data
+      if #line == 4 then
+        -- calling function with no arguments
+        code[3] = "NOARGS"
+      else
+        -- calling function with 1 or more arguments, parse each
+        local chunk = {}
+        local index = 3
+
+      end
+    elseif line[1].typeof == "END" then
+      code[1] = "ENDBLOCK"
+    elseif line[1].typeof == "IDENTIFIER" then
+
+    else
       throw("Unidentifiable statement", current_line)
     end
     table.insert(bytecode, code)

@@ -4,7 +4,9 @@
 string str = "Hello!" //swag
 number n = 50
 
-dl;ASKd 50
+function add: number x, number y
 
-println(str == n)
+end
+
+println()
 
